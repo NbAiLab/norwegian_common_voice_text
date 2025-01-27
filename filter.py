@@ -49,7 +49,7 @@ def no_special_characters(sentence: str) -> bool:
     pattern = r'^[a-zA-ZæøåÆØÅ\s,.!?\'’:;\-]*$'
     return re.fullmatch(pattern, sentence, re.UNICODE) is not None
 
-def reading_time_filter(sentence: str, wpm: int = 150, min_sec: int = 8, max_sec: int = 17) -> bool:
+def reading_time_filter(sentence: str, wpm: int = 130, min_sec: int = 8, max_sec: int = 15) -> bool:
     """
     Accept only sentences that take 8–17 seconds to read,
     assuming 150 wpm. Words over 10 chars count as 2 words.
