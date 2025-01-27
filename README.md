@@ -19,7 +19,7 @@ The resulting data is intended for integration with Mozilla’s [Common Voice](h
 
 ## What Does the Script Do?
 
-The script reads a `.tsv` input file containing Norwegian sentences (specifically from the Bokmål–Nynorsk translation corpus). It runs these sentences through a series of filters to ensure only “clean” and appropriate sentences remain for Common Voice. The following filters are applied:
+The script reads a `.tsv` input file containing Norwegian sentences (specifically from the Bokmål–Nynorsk translation corpus). It runs these sentences through a series of filters to ensure only “clean” and appropriate sentences remain for Common Voice. The filtering process includes both **fast filters** (for quick pre-validation) and a **spaCy-based filter** for more advanced linguistic checks. The following filters are applied:
 
 1. **starts_with_capital**  
    - Checks if the sentence starts with a capital letter.
@@ -43,8 +43,11 @@ The script reads a `.tsv` input file containing Norwegian sentences (specificall
    - Accepts only sentences estimated to take **8–17 seconds** to read at **150 WPM**.  
    - Words with more than **10 characters** count as **2 words** to account for complexity.
 
-8. **proper_noun_filter** (spaCy-based)  
-   - Uses [spaCy’s Norwegian model](https://spacy.io/models/nb) to discard sentences containing **proper nouns (PROPN)**, i.e. names of people or places.
+8. **basic_proper_noun_filter**
+   - Quickly filters out sentences that contain words starting with capital letters within the sentence body (e.g., names or places).
+
+9. **proper_noun_filter** (spaCy-based)  
+   - Uses [spaCy’s Norwegian model](https://spacy.io/models/nb) to discard sentences containing **proper nouns (PROPN)**, i.e., names of people or places.io/models/nb) to discard sentences containing **proper nouns (PROPN)**, i.e. names of people or places.
 
 ## Requirements
 

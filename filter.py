@@ -61,6 +61,18 @@ def reading_time_filter(sentence: str, wpm: int = 150, min_sec: int = 8, max_sec
     reading_time = effective_word_count / words_per_second
     return min_sec <= reading_time <= max_sec
 
+def basic_proper_noun_filter(sentence: str) -> bool:
+    """
+    Quickly filters out sentences containing words with capital letters 
+    (ignoring the first word which starts the sentence).
+    """
+    words = sentence.split()
+    if len(words) > 1:
+        for word in words[1:]:
+            if word[0].isupper():
+                return False
+    return True
+
 def create_proper_noun_filter(nlp):
     """
     Return a function that filters out sentences containing proper nouns (PROPN).
@@ -109,7 +121,8 @@ def main():
         (only_one_sentence, "only_one_sentence"),
         (has_no_numbers, "has_no_numbers"),
         (no_special_characters, "no_special_characters"),
-        (reading_time_filter, "reading_time_filter")
+        (reading_time_filter, "reading_time_filter"),
+        (basic_proper_noun_filter, "basic_proper_noun_filter")
     ]
 
     # Track how many sentences each filter kills
