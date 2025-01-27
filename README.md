@@ -46,7 +46,10 @@ The script reads a `.tsv` input file containing Norwegian sentences (specificall
 8. **basic_proper_noun_filter**
    - Quickly filters out sentences that contain words starting with capital letters within the sentence body (e.g., names or places).
 
-9. **proper_noun_filter** (spaCy-based)  
+9. **maximum_word_filter**
+   -- Filter out sentences with more than 18 words
+
+10. **proper_noun_filter** (spaCy-based)  
    - Uses [spaCy’s Norwegian model](https://spacy.io/models/nb) to discard sentences containing **proper nouns (PROPN)**, i.e., names of people or places.io/models/nb) to discard sentences containing **proper nouns (PROPN)**, i.e. names of people or places.
 
 ## Requirements

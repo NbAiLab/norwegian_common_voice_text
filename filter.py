@@ -51,8 +51,8 @@ def no_special_characters(sentence: str) -> bool:
 
 def reading_time_filter(sentence: str, wpm: int = 100, min_sec: int = 7, max_sec: int = 15) -> bool:
     """
-    Accept only sentences that take 8–17 seconds to read,
-    assuming 150 wpm. Words over 10 chars count as 2 words.
+    Accept only sentences that take 7–15 seconds to read,
+    assuming 100 wpm. Words over 10 chars count as 2 words.
     """
     words = sentence.split()
     # Count each word; if it has more than 10 characters, count as 2
@@ -60,6 +60,12 @@ def reading_time_filter(sentence: str, wpm: int = 100, min_sec: int = 7, max_sec
     words_per_second = wpm / 60.0
     reading_time = effective_word_count / words_per_second
     return min_sec <= reading_time <= max_sec
+
+def max_word_count_filter(sentence: str, max_words: int = 18) -> bool:
+    """
+    Accept only sentences with a maximum number of words.
+    """
+    return len(sentence.split()) <= max_words
 
 def basic_proper_noun_filter(sentence: str) -> bool:
     """
@@ -122,6 +128,7 @@ def main():
         (has_no_numbers, "has_no_numbers"),
         (no_special_characters, "no_special_characters"),
         (reading_time_filter, "reading_time_filter"),
+        (max_word_count_filter, "max_word_count_filter"),
         (basic_proper_noun_filter, "basic_proper_noun_filter")
     ]
 
