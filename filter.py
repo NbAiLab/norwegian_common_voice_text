@@ -187,7 +187,7 @@ def main():
     domain = "General"
 
     # Write the final survivors in 1000-line chunks
-    CHUNK_SIZE = 50000
+    CHUNK_SIZE = 10000
     total_final = len(final_pass)
     chunk_count = 0
 
