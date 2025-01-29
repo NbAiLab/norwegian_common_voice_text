@@ -49,7 +49,7 @@ def no_special_characters(sentence: str) -> bool:
     pattern = r'^[a-zA-ZæøåÆØÅ\s,.!?\'’:;\-]*$'
     return re.fullmatch(pattern, sentence, re.UNICODE) is not None
 
-def reading_time_filter(sentence: str, wpm: int = 100, min_sec: int = 7, max_sec: int = 15) -> bool:
+def reading_time_filter(sentence: str, wpm: int = 100, min_sec: int = 2, max_sec: int = 7) -> bool:
     """
     Accept only sentences that take 7–15 seconds to read,
     assuming 100 wpm. Words over 10 chars count as 2 words.
@@ -61,7 +61,7 @@ def reading_time_filter(sentence: str, wpm: int = 100, min_sec: int = 7, max_sec
     reading_time = effective_word_count / words_per_second
     return min_sec <= reading_time <= max_sec
 
-def max_word_count_filter(sentence: str, max_words: int = 18) -> bool:
+def max_word_count_filter(sentence: str, max_words: int = 14) -> bool:
     """
     Accept only sentences with a maximum number of words.
     """
@@ -96,6 +96,8 @@ def main():
     parser = argparse.ArgumentParser(description="Filter Norwegian sentences with spaCy.")
     parser.add_argument('--input_file', required=True, help='Input TSV file.')
     parser.add_argument('--output_folder', required=True, help='Folder where output TSV chunks are saved.')
+    parser.add_argument('--single_sentences', action='store_true', help='Process only single sentences. Defaults to False.')
+    parser.add_argument('--chunk_size', type=int, default=1000000, help='Number of sentences per output chunk. Defaults to 1,000,000.')
     args = parser.parse_args()
 
     # Validate input file extension
@@ -187,7 +189,7 @@ def main():
     domain = "General"
 
     # Write the final survivors in 1000-line chunks
-    CHUNK_SIZE = 10000
+    CHUNK_SIZE = args.chunk_size
     total_final = len(final_pass)
     chunk_count = 0
 
@@ -196,16 +198,24 @@ def main():
         chunk = final_pass[i : i + CHUNK_SIZE]
         chunk_filename = os.path.join(args.output_folder, f"output_{chunk_count}.tsv")
         
-        with open(chunk_filename, 'w', encoding='utf-8') as outfile:
-            for sentence in chunk:
-                outfile.write(
-                    f"{sentence}\t"
-                    f"{source}\t"
-                    f"{additional_rationale}\t"
-                    f""  # Sentence Quality Assurance Feedback: blank
-                    f"\t"
-                    f"{domain}\n"
-                )
+        if args.single_sentences:
+            with open(chunk_filename, 'w', encoding='utf-8') as outfile:
+                for sentence in chunk:
+                    outfile.write(
+                        f"{sentence}\n"
+                    )
+
+        else:
+            with open(chunk_filename, 'w', encoding='utf-8') as outfile:
+                for sentence in chunk:
+                    outfile.write(
+                        f"{sentence}\t"
+                        f"{source}\t"
+                        f"{additional_rationale}\t"
+                        f""  # Sentence Quality Assurance Feedback: blank
+                        f"\t"
+                        f"{domain}\n"
+                    )
 
     # Print statistics
     print("\n===== Filtering Statistics =====")
